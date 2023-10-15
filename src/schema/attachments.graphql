@@ -1,0 +1,25 @@
+type Attachment {
+  attachment_id: ID!
+  task_id: ID!
+  file_name: String!
+  file_data: String!  # Assuming you store the binary data as Base64 or some other string representation
+  created_at: String!
+}
+
+type Query {
+  getAttachment(attachment_id: ID!): Attachment
+  getAllAttachments: [Attachment]
+}
+
+type Mutation {
+  createAttachment(attachment: AttachmentInput!): Attachment
+  updateAttachment(attachment_id: ID!, attachment: AttachmentInput!): Attachment
+  deleteAttachment(attachment_id: ID!): Attachment
+}
+
+input AttachmentInput {
+  task_id: ID!
+  file_name: String!
+  file_data: String!
+  created_at: String!
+}

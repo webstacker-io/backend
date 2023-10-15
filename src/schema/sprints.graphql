@@ -1,0 +1,25 @@
+type Sprint {
+  sprint_id: ID!
+  sprint_name: String!
+  project_id: ID!
+  start_date: String!
+  end_date: String!
+}
+
+type Query {
+  getSprint(sprint_id: ID!): Sprint
+  getAllSprints: [Sprint]
+}
+
+type Mutation {
+  createSprint(sprint: SprintInput!): Sprint
+  updateSprint(sprint_id: ID!, sprint: SprintInput!): Sprint
+  deleteSprint(sprint_id: ID!): Sprint
+}
+
+input SprintInput {
+  sprint_name: String!
+  project_id: ID!
+  start_date: String!
+  end_date: String!
+}

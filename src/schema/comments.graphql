@@ -1,0 +1,25 @@
+type Comment {
+  comment_id: ID!
+  task_id: ID!
+  user_id: ID!
+  comment_text: String!
+  created_at: String!
+}
+
+type Query {
+  getComment(comment_id: ID!): Comment
+  getAllComments: [Comment]
+}
+
+type Mutation {
+  createComment(comment: CommentInput!): Comment
+  updateComment(comment_id: ID!, comment: CommentInput!): Comment
+  deleteComment(comment_id: ID!): Comment
+}
+
+input CommentInput {
+  task_id: ID!
+  user_id: ID!
+  comment_text: String!
+  created_at: String!
+}

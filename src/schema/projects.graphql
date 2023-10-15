@@ -1,0 +1,21 @@
+type Project {
+  project_id: ID!
+  project_name: String!
+  client_id: ID!
+}
+
+type Query {
+  getProject(project_id: ID!): Project
+  getAllProjects: [Project]
+}
+
+type Mutation {
+  createProject(project: ProjectInput!): Project
+  updateProject(project_id: ID!, project: ProjectInput!): Project
+  deleteProject(project_id: ID!): Project
+}
+
+input ProjectInput {
+  project_name: String!
+  client_id: ID!
+}

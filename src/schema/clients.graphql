@@ -1,0 +1,21 @@
+type Client {
+  client_id: ID!
+  client_name: String!
+  email: String!
+}
+
+type Query {
+  getClient(client_id: ID!): Client
+  getAllClients: [Client]
+}
+
+type Mutation {
+  createClient(client: ClientInput!): Client
+  updateClient(client_id: ID!, client: ClientInput!): Client
+  deleteClient(client_id: ID!): Client
+}
+
+input ClientInput {
+  client_name: String!
+  email: String!
+}
