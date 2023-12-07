@@ -1,18 +1,21 @@
 import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
 import { makeExecutableSchema } from 'graphql-tools';
+import {} from './src/schema'
 import fs from 'fs';
 
 const typeDefs = [];
 const resolvers = [];
 
 // Dynamically import and combine schemas and resolvers
-const schemaFiles = fs.readdirSync('./src/schema');
-for (const file of schemaFiles) {
-  const filePath = `./src/schema/${file}`;
-  const schema = fs.readFileSync(filePath, 'utf-8');
-  typeDefs.push(schema);
-}
+// const schemaFiles = fs.readdirSync('./src/schema');
+// for (const file of schemaFiles) {
+//   const filePath = `./src/schema/${file}`;
+//   const schema = fs.readFileSync(filePath, 'utf-8');
+//   typeDefs.push(schema);
+// }
+
+
 
 const resolverFiles = fs.readdirSync('./src/resolvers');
 for (const file of resolverFiles) {
@@ -21,7 +24,7 @@ for (const file of resolverFiles) {
 }
 
 const schema = makeExecutableSchema({
-  typeDefs,
+  [],
   resolvers,
 });
 

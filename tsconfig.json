@@ -1,7 +1,15 @@
 
 {
     "compilerOptions": {
-      
+      "baseUrl": "src",
+        "paths": {
+          "@schema/*": ["schema/*"],
+          "@resolvers/*": ["resolvers*"],
+        },
+      "types": [
+        "node"
+      ],
+      "esModuleInterop": true,
       "target": "ES6",
       "module": "CommonJS",
       "outDir": "./dist",

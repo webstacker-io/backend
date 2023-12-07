@@ -1,14 +1,20 @@
 import { UserInputError } from 'apollo-server-express';
-import { YourCassandraDriver } from '../../data/your-cassandra-driver';
+import {
+  getSprintById,
+  getAllSprintsByProjectById,
+  createSprint,
+  updateSprint,
+  deleteSprint,
+} from '../drivers/sprints';
 
 const sprints: { [key: string]: any }[] = require('../data/sprintsData'); // Sample in-memory data
 
 const sprintResolvers = {
   Query: {
-    getSprint: async (_, { sprint_id }) => {
+    getSprint: async (_: any, { sprint_id }: any) => {
       try {
         // Implement logic to fetch a sprint by ID from Cassandra using your driver
-        const sprint = sprints.find((s) => s.sprint_id === sprint_id);
+        const sprint = await getSprintById(sprint_id);
         if (!sprint) {
           throw new UserInputError('Sprint not found', { sprint_id });
         }
@@ -17,48 +23,46 @@ const sprintResolvers = {
         throw new UserInputError('Unable to fetch sprint', { error });
       }
     },
-    getAllSprints: async () => {
+    getAllSprints: async (_: any, { project_id }: any) => {
       try {
         // Implement logic to fetch all sprints from Cassandra using your driver
+        const sprints = await getAllSprintsByProjectById(project_id);
         return sprints;
       } catch (error) {
-        throw a UserInputError('Unable to fetch sprints', { error });
+        throw new UserInputError('Unable to fetch sprints', { error });
       }
     },
   },
   Mutation: {
-    createSprint: async (_, { sprint }) => {
+    createSprint: async (_: any, { sprint }: any) => {
       try {
         // Implement logic to create a new sprint in Cassandra using your driver
-        sprint.sprint_id = String(Math.max(...sprints.map((s) => Number(s.sprint_id))) + 1);
-        sprints.push(sprint);
-        return sprint;
+        const newSprint = await createSprint(sprint);
+        return newSprint;
       } catch (error) {
         throw new UserInputError('Unable to create sprint', { error });
       }
     },
-    updateSprint: async (_, { sprint_id, sprint }) => {
+    updateSprint: async (_: any, { sprint_id, sprint }: any) => {
       try {
         // Implement logic to update a sprint in Cassandra using your driver
-        const index = sprints.findIndex((s) => s.sprint_id === sprint_id);
-        if (index === -1) {
-          throw new UserInputError('Sprint not found', { sprint_id });
-        }
-        sprints[index] = { ...sprints[index], ...sprint };
-        return sprints[index];
+        const updatedSprint = await updateSprint(sprint_id, sprint);
+        return updatedSprint;
+       
       } catch (error) {
         throw new UserInputError('Unable to update sprint', { error });
       }
     },
-    deleteSprint: async (_, { sprint_id }) => {
+    deleteSprint: async (_: any, { sprint_id }: any) => {
       try {
         // Implement logic to delete a sprint from Cassandra using your driver
-        const index = sprints.findIndex((s) => s.sprint_id === sprint_id);
-        if (index === -1) {
-          throw new UserInputError('Sprint not found', { sprint_id });
+       
+        const selectedSprint = await getSprintById(sprint_id);
+        if (!selectedSprint) {
+          throw new UserInputError('Project not found', { sprint_id });
         }
-        const deletedSprint = sprints.splice(index, 1)[0];
-        return deletedSprint;
+        await deleteSprint(sprint_id);
+        return selectedSprint;
       } catch (error) {
         throw new UserInputError('Unable to delete sprint', { error });
       }

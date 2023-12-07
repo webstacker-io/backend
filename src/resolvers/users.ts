@@ -1,5 +1,11 @@
 import { UserInputError } from 'apollo-server-express';
-import {  } from 'apollo-server-express'; // Import your Cassandra driver
+import {
+  getAllUsers,
+  getUser,
+  createUser,
+  updateUser,
+  deleteUser,
+} from '../drivers/users'; // Import your Cassandra driver
 
 const userResolvers = {
   Query: {

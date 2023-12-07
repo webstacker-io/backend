@@ -1,12 +1,18 @@
 import { UserInputError } from 'apollo-server-express';
-import { YourCassandraDriver } from '../../data/your-cassandra-driver';
+import {
+  getAllProjects,
+  getProjectById,
+  createProject,
+  updateProject,
+  deleteProject,
+} from '../drivers/projects'
 
 const projectResolvers = {
   Query: {
     getProject: async (_: any, { project_id }: any) => {
       try {
         // Implement logic to fetch a project by ID from Cassandra using your driver
-        const project = await YourCassandraDriver.getProjectById(project_id);
+        const project = await getProjectById(project_id);
         if (!project) {
           throw new UserInputError('Project not found', { project_id });
         }
@@ -18,7 +24,7 @@ const projectResolvers = {
     getAllProjects: async () => {
       try {
         // Implement logic to fetch all projects from Cassandra using your driver
-        const projects = await YourCassandraDriver.getAllProjects();
+        const projects = await getAllProjects();
         return projects;
       } catch (error) {
         throw new UserInputError('Unable to fetch projects', { error });
@@ -29,7 +35,7 @@ const projectResolvers = {
     createProject: async (_: any, { project }: any) => {
       try {
         // Implement logic to create a new project in Cassandra using your driver
-        const newProject = await YourCassandraDriver.createProject(project);
+        const newProject = await createProject(project);
         return newProject;
       } catch (error) {
         throw new UserInputError('Unable to create project', { error });
@@ -38,7 +44,7 @@ const projectResolvers = {
     updateProject: async (_: any, { project_id, project }: any) => {
       try {
         // Implement logic to update a project in Cassandra using your driver
-        const updatedProject = await YourCassandraDriver.updateProject(project_id, project);
+        const updatedProject = await updateProject(project_id, project);
         return updatedProject;
       } catch (error) {
         throw new UserInputError('Unable to update project', { error });
@@ -47,12 +53,12 @@ const projectResolvers = {
     deleteProject: async (_: any, { project_id }: any) => {
       try {
         // Implement logic to delete a project from Cassandra using your driver
-        const index = projects.findIndex((p) => p.project_id === project_id);
-        if (index === -1) {
+        const selectedProject = await getProjectById(project_id);
+        if (!selectedProject) {
           throw new UserInputError('Project not found', { project_id });
         }
-        const deletedProject = projects.splice(index, 1)[0];
-        return deletedProject;
+        await deleteProject(project_id);
+        return selectedProject;
       } catch (error) {
         throw new UserInputError('Unable to delete project', { error });
       }
